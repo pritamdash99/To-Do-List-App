@@ -11,6 +11,8 @@ class EntryViewController: UIViewController, UITextFieldDelegate {
 //Have a field where the user can enter in a task and a done button function which once they click it will save it.
     @IBOutlet var field : UITextField!
     
+    var update : (() -> Void)? //Is a closure
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,6 +60,11 @@ class EntryViewController: UIViewController, UITextFieldDelegate {
         //This way every task gets saved with a unique key which can be later used fetch easily.
         
         //Next we need to update the tableView so we need to pass a reference of a function to the EntryViewController.
+        
+        update?() //Means = If the update function exists then call it
+        
+        //Once called, dismiss the root VC
+        navigationController?.popViewController(animated: true)
     }
 
 }

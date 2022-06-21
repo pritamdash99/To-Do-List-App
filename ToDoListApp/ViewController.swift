@@ -32,9 +32,28 @@ class ViewController: UIViewController {
         }
         
         //Get all current saved tasks
-       
+        updateTasks()
     }
-    
+    func updateTasks() {
+        tasks.removeAll() //removes all the eleemnts in the task array so there is no duplicates.
+        
+        //Get the count of tasks
+        guard let count = UserDefaults().value(forKey: "count") as? Int else {
+            return
+        }
+        
+        for x in 0..<count{
+            //get each task and add it to the task array.
+            //We start from 0 so task +1
+            if let task = UserDefaults().value(forKey: "task_\(x+1)") as? String {
+                tasks.append(task)
+            }
+        }
+        
+        taskTableView.reloadData()
+        
+        //without reloaddata the tableview won't refresh
+    }
     @IBAction func didTapAdd() {
         //We need another VC to make an entry.
         
@@ -42,6 +61,16 @@ class ViewController: UIViewController {
         let entryVC = storyboard?.instantiateViewController(withIdentifier: "EntryViewController") as! EntryViewController
         
         entryVC.title = "New Task"
+        
+        entryVC.update = {
+            //With this update function we want to refetch the saved tasks.
+            //Use DispatchQueue to prioritise the updating of the tasks
+            
+            DispatchQueue.main.async {
+                self.updateTasks()
+            }
+            
+        }
         
         //Because we embedded the main vc inside a navigation vc we do :
         navigationController?.pushViewController(entryVC, animated: true)
