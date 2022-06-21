@@ -6,6 +6,7 @@
 //
 
 import UIKit
+//We will be creating 2 other VCs 1 to enter a task and another to show the information about a task.
 
 class ViewController: UIViewController {
     @IBOutlet var taskTableView: UITableView!
@@ -17,8 +18,33 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        //Get all current saved tasks
+        //Giving a title to the VC
+        title = "Tasks"
         
+        //connecting the delegate and data source of tableview
+        taskTableView.delegate = self
+        taskTableView.dataSource = self
+        
+        //Setup : Initial save mechanism
+        if !UserDefaults().bool(forKey:"setup"){
+            UserDefaults().set(true, forKey: "setup")
+            UserDefaults().set(0, forKey: "count")
+        }
+        
+        //Get all current saved tasks
+       
+    }
+    
+    @IBAction func didTapAdd() {
+        //We need another VC to make an entry.
+        
+        //instantiate the VC
+        let entryVC = storyboard?.instantiateViewController(withIdentifier: "EntryViewController") as! EntryViewController
+        
+        entryVC.title = "New Task"
+        
+        //Because we embedded the main vc inside a navigation vc we do :
+        navigationController?.pushViewController(entryVC, animated: true)
     }
 }
 
@@ -38,7 +64,7 @@ extension ViewController : UITableViewDataSource {
         
         let cell = taskTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        
+        cell.textLabel?.text = tasks[indexPath.row]
         return cell
     }
     
