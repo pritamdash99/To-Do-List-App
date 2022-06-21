@@ -80,6 +80,13 @@ class ViewController: UIViewController {
 extension ViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         taskTableView.deselectRow(at: indexPath, animated: true)
+        
+        //On selecting a row these op should happen, new screen should open
+        let taskVC = storyboard?.instantiateViewController(withIdentifier: "TaskViewController") as! TaskViewController
+        taskVC.title = "New Task"
+        
+        //Because we embedded the main vc inside a navigation vc we do :
+        navigationController?.pushViewController(taskVC, animated: true)
     }
 }
 extension ViewController : UITableViewDataSource {
